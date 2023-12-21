@@ -36,7 +36,6 @@ const updateCountdown = (targetTime, tomorrow) => {
     return number.toString().padStart(2, '0');
   }
 
-
   const currentTime = moment();
   const duration = moment.duration(targetTime.diff(currentTime));
   const hoursRemaining = padZero(Math.floor(duration.asHours()));
@@ -51,7 +50,7 @@ const updateCountdown = (targetTime, tomorrow) => {
 const startCountdown = (endTime, nextDay) => {
   const updateCountdownWrapper = () => {
     if (nextDay) {
-      const tomorrow = moment().add(0, 'days');
+      const tomorrow = moment().add(1, 'days');
       const desiredTimeTomorrow = moment(endTime, 'HH:mm');
       const nextDayDate = tomorrow.clone().set({
         hour: desiredTimeTomorrow.hours(),
@@ -88,26 +87,45 @@ const fetchPrayerTimes = async () => {
     prayerTimesTomorrow.value = handlePrayerTimes(+1);
 
     const currentTime = new Date().toLocaleTimeString('en-US', {hour12: false, hour: '2-digit', minute: '2-digit'});
-
+    let nextDay = false;
     for (let i = 0; i < prayerTimesToday.value.length; i++) {
       if(currentTime < prayerTimesToday.value[i])
       {
-        currentPrayer.value['index'] = i-1
-        currentPrayerIndex.value = i-1
+        if(i === 0){
+          currentPrayer.value['index'] = 0
+          currentPrayerIndex.value = 0
 
-        currentPrayer.value['time'] = prayerTimesToday.value[i-1]
-        currentPrayer.value['title'] = getPrayerTitle(i-1)
+          currentPrayer.value['time'] = prayerTimesToday.value[0]
+          currentPrayer.value['title'] = getPrayerTitle(0)
+        } else {
+          currentPrayer.value['index'] = i-1
+          currentPrayerIndex.value = i-1
+
+          currentPrayer.value['time'] = prayerTimesToday.value[i-1]
+          currentPrayer.value['title'] = getPrayerTitle(i-1)
+        }
 
         nextPrayer.value['index'] = i
         nextPrayer.value['time'] = prayerTimesToday.value[i]
         nextPrayer.value['title'] = getPrayerTitle(i)
 
         break;
+      } else if(currentTime > prayerTimesTomorrow.value[i]){
+        currentPrayer.value['index'] = 5
+        currentPrayerIndex.value = 5
+        currentPrayer.value['time'] = prayerTimesToday.value[5]
+        currentPrayer.value['title'] = getPrayerTitle(5)
+
+        nextPrayer.value['index'] = 0
+        nextPrayer.value['time'] = prayerTimesTomorrow.value[0]
+        nextPrayer.value['title'] = getPrayerTitle(0)
+        nextDay = true;
+        break;
       }
     }
 
 
-    startCountdown(nextPrayer.value['time']);
+    startCountdown(nextPrayer.value['time'],nextDay);
 
 
   } catch (error) {
