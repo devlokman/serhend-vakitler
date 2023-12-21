@@ -20,6 +20,7 @@
 <script setup>
 
 import {ref} from "vue";
+import {IonCard,IonCardHeader,IonCardContent,IonRow,IonCol} from "@ionic/vue";
 
 const selectedHadith = ref([]);
 
