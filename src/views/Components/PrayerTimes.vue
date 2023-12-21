@@ -1,7 +1,7 @@
 <template>
   <p class="ion-text-center">{{ countdown }}</p>
   <ion-list v-if="prayerTimesToday.length > 0" lines="none">
-    <ion-item v-for="(prayerTime, index) in prayerTimesToday" :key="index" :class="{ 'current': currentPrayerIndex === index }">
+    <ion-item v-for="(prayerTime, index) in prayerTimesToday" :key="index" :class="{ 'current': currentPrayerIndex === index }" class="rounded">
       <ion-label>{{ getPrayerTitle(index) }}</ion-label>
       <ion-label class="ion-float-end ion-text-end" slot="end">{{ prayerTime }}</ion-label>
     </ion-item>
@@ -124,12 +124,10 @@ const fetchPrayerTimes = async () => {
       }
     }
 
-
     startCountdown(nextPrayer.value['time'],nextDay);
 
 
   } catch (error) {
-    // Handle error
     console.error('Error fetching prayer times:', error);
   }
 };
@@ -151,5 +149,7 @@ ion-list {
   background: #eee;
   --color: #000;
 }
-
+.rounded{
+  border-radius: 20px;
+}
 </style>

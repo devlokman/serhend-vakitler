@@ -14,13 +14,16 @@
         </div>
       </div>
       <PrayerTimes/>
-      <hr/>
+      <hr>
+      <HadithCard/>
+
     </ion-content>
   </ion-page>
 </template>
 <script setup lang="ts">
 import {IonPage,IonContent} from "@ionic/vue";
 import PrayerTimes from "@/views/Components/PrayerTimes.vue";
+import HadithCard from "@/views/Components/HadithCard.vue";
 import Header from "@/views/Partials/Header.vue";
 
 const currentDate = new Date();

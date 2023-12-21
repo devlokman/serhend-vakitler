@@ -9,7 +9,7 @@
         </ion-tab-button>
 
         <ion-item>
-          <Logo/>
+          <Logo :darkMode="isDarkMode"/>
         </ion-item>
 
         <ion-tab-button tab="ayarlar" href="/ayarlar">
@@ -26,4 +26,23 @@ import { IonPage, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouter
 import {timerOutline, settingsOutline} from "ionicons/icons";
 import Logo from "@/views/Partials/Logo.vue";
 
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+const isDarkMode = ref(false);
+
+const updateColorScheme = (event: MediaQueryListEvent) => {
+  isDarkMode.value = event.matches;
+};
+
+const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+onMounted(() => {
+  isDarkMode.value = darkModeQuery.matches;
+  darkModeQuery.addEventListener('change', updateColorScheme);
+  console.log(isDarkMode.value);
+});
+
+onBeforeUnmount(() => {
+  darkModeQuery.removeEventListener('change', updateColorScheme);
+});
 </script>
