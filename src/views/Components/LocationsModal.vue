@@ -59,6 +59,7 @@ import {fetchCountries} from "@/services/countriesService";
 import {fetchRegions} from "@/services/countryService";
 import {fetchCities} from "@/services/citiesService";
 import {CountryModel} from "@/models/countries.model";
+import {setLocalStorageItem} from "@/services/localStorageService";
 
 const countries = ref<CountryModel[]>([]);
 const regions = ref([]);
