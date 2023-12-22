@@ -1,11 +1,10 @@
 import axios from 'axios';
 import {getLocalStorageItem} from "@/services/localStorageService.ts";
 
-const API_BASE_URL = 'https://namaz-vakti-api-two.vercel.app';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const getPrayerTimes = async () => {
     const days = 3;
-    const timezoneOffset = 180;
+    const timezoneOffset = 60;
     const calculationMethod = 'Turkey';
 
 

@@ -1,9 +1,10 @@
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const fetchCountries = async () => {
     try {
         const response = await axios.get(
-            `https://namaz-vakti-api-two.vercel.app/api/countries`
+            `${API_BASE_URL}/api/countries`
         );
         return response.data;
     } catch (error) {
