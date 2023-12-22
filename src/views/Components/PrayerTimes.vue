@@ -1,9 +1,9 @@
 <template>
   <p class="ion-text-center">{{ countdown }}</p>
-  <ion-list v-if="formattedPrayerTimes.length > 0">
-    <ion-item v-for="(prayerTime, index) in formattedPrayerTimes" :key="index">
-      <ion-label>{{ prayerTime.title }}</ion-label>
-      <ion-label class="ion-float-end" slot="end">{{ prayerTime.time }}</ion-label>
+  <ion-list v-if="prayerTimesToday.length > 0" lines="none">
+    <ion-item v-for="(prayerTime, index) in prayerTimesToday" :key="index" :class="{ 'current': currentPrayerIndex === index }">
+      <ion-label>{{ getPrayerTitle(index) }}</ion-label>
+      <ion-label class="ion-float-end ion-text-end" slot="end">{{ prayerTime }}</ion-label>
     </ion-item>
   </ion-list>
   <ion-text v-else>No prayer times available for today.</ion-text>
@@ -16,12 +16,15 @@ import moment from "moment";
 
 const prayerTimes = ref({});
 const countdown = ref('');
+const currentPrayerIndex = ref('');
 
-const formattedPrayerTimes = ref([]);
-const formattedPrayerTimesTomorrow = ref([]);
-const formattedPrayerTimesYesterday = ref([]);
+const currentPrayer = ref([]);
+const nextPrayer = ref([]);
 
-const currentPrayer = ref('');
+const prayerTimesToday = ref([]);
+const prayerTimesYesterday = ref([]);
+const prayerTimesTomorrow = ref([]);
+
 
 const getPrayerTitle = (index) => {
   const titles = ['İmsak', 'Güneş', 'Öğle', 'İkindi', 'Akşam', 'Yatsı'];
@@ -29,14 +32,19 @@ const getPrayerTitle = (index) => {
 };
 
 const updateCountdown = (targetTime, tomorrow) => {
+  function padZero(number) {
+    return number.toString().padStart(2, '0');
+  }
+
+
   const currentTime = moment();
   const duration = moment.duration(targetTime.diff(currentTime));
+  const hoursRemaining = padZero(Math.floor(duration.asHours()));
+  const minutesRemaining = padZero(duration.minutes());
+  const secondsRemaining = padZero(duration.seconds());
 
-  const hoursRemaining = Math.floor(duration.asHours());
-  const minutesRemaining = duration.minutes();
-  const secondsRemaining = duration.seconds();
 
-  const currentPrayerTitle = (tomorrow ? 'İmsak' : currentPrayer.value.title);
+  const currentPrayerTitle = (tomorrow ? 'İmsak' : nextPrayer.value.title);
   return `${currentPrayerTitle} Vaktine kalan ${hoursRemaining}:${minutesRemaining}:${secondsRemaining}`;
 };
 
@@ -53,7 +61,8 @@ const startCountdown = (endTime, nextDay) => {
       });
       countdown.value = updateCountdown(nextDayDate, true);
     } else {
-      countdown.value = updateCountdown(moment(endTime));
+      countdown.value = updateCountdown(moment(endTime, 'HH:mm'));
+
     }
   };
 
@@ -62,72 +71,44 @@ const startCountdown = (endTime, nextDay) => {
   setInterval(updateCountdownWrapper, 1000);
 
 };
+const handlePrayerTimes = (offset = 0) => {
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + offset);
+  const formattedDate = currentDate.toISOString().split('T')[0];
+  return  prayerTimes.value[formattedDate] || [];
+};
 
 const fetchPrayerTimes = async () => {
   try {
-    const response = await getPrayerTimes('Turkey', 'Ankara', 'Ankara', '2023-12-21', 3, 180, 'Turkey');
+    const response = await getPrayerTimes();
     prayerTimes.value = response.times;
 
-    const today = new Date().toISOString().split('T')[0];
-    const todayPrayerTimes = response.times[today] || [];
-
-    formattedPrayerTimes.value = todayPrayerTimes.map((time, index) => ({
-      title: getPrayerTitle(index),
-      time,
-    }));
-
-    const nextDay = new Date();
-    nextDay.setDate(nextDay.getDate() + 1);
-    const tomorrow = nextDay.toISOString().split('T')[0];
-    const tomorrowPrayerTimes = response.times[tomorrow] || [];
-
-    formattedPrayerTimesTomorrow.value = tomorrowPrayerTimes.map((time, index) => ({
-      title: getPrayerTitle(index),
-      time,
-    }));
-
-
-    const prevDay = new Date();
-    prevDay.setDate(prevDay.getDate() - 1);
-    const yesterday = prevDay.toISOString().split('T')[0];
-    const yesterdayPrayerTimes = response.times[yesterday] || [];
-    formattedPrayerTimesYesterday.value = yesterdayPrayerTimes.map((time, index) => ({
-      title: getPrayerTitle(index),
-      time,
-    }));
+    prayerTimesToday.value = handlePrayerTimes();
+    prayerTimesYesterday.value = handlePrayerTimes(-1);
+    prayerTimesTomorrow.value = handlePrayerTimes(+1);
 
     const currentTime = new Date().toLocaleTimeString('en-US', {hour12: false, hour: '2-digit', minute: '2-digit'});
-    let startedPrayerTime = null;
-    let endedPrayerTime = null;
 
-    for (let i = 0; i < formattedPrayerTimes.value.length; i++) {
-      const prayerTime = formattedPrayerTimes.value[i];
+    for (let i = 0; i < prayerTimesToday.value.length; i++) {
+      if(currentTime < prayerTimesToday.value[i])
+      {
+        currentPrayer.value['index'] = i-1
+        currentPrayerIndex.value = i-1
 
-      if (currentTime >= prayerTime.time) {
-        startedPrayerTime = prayerTime;
-      }
+        currentPrayer.value['time'] = prayerTimesToday.value[i-1]
+        currentPrayer.value['title'] = getPrayerTitle(i-1)
 
-      if (currentTime < prayerTime.time) {
-        endedPrayerTime = prayerTime;
+        nextPrayer.value['index'] = i
+        nextPrayer.value['time'] = prayerTimesToday.value[i]
+        nextPrayer.value['title'] = getPrayerTitle(i)
 
-        if (currentTime > '00:00') {
-          startedPrayerTime = formattedPrayerTimesYesterday.value[5]
-        }
         break;
       }
+    }
 
-    }
-    if (startedPrayerTime && startedPrayerTime.title === 'Yatsı') {
-      const nextDay = new Date(currentTime);
-      nextDay.setDate(nextDay.getDate() + 1);
-      endedPrayerTime = formattedPrayerTimesTomorrow.value.find(prayerTime => prayerTime.title === 'İmsak');
-    }
-    currentPrayer.value = startedPrayerTime;
-    if (endedPrayerTime) {
-      startCountdown(endedPrayerTime.time, startedPrayerTime.title === 'Yatsı');
-    } else {
-      console.log('No valid time frame found.');
-    }
+
+    startCountdown(nextPrayer.value['time']);
+
 
   } catch (error) {
     // Handle error
@@ -149,7 +130,7 @@ ion-list {
 }
 
 .current {
-  --background: #eee;
+  background: #eee;
   --color: #000;
 }
 
