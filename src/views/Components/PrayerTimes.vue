@@ -154,16 +154,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-ion-list{
-  background: transparent;
-  ion-item{
-    --background: transparent;
-  }
-}
-.current {
-  --background: #eee;
-  --color: #000;
-}
-
-</style>
