@@ -58,10 +58,8 @@ import {onMounted, ref, watch} from 'vue';
 import {fetchCountries} from "@/services/countriesService";
 import {fetchRegions} from "@/services/countryService";
 import {fetchCities} from "@/services/citiesService";
-import {getLocalStorageItem, setLocalStorageItem} from "@/services/localStorageService";
-import {getPrayerTimes} from "@/services/prayerTimesService";
 
-const countries = ref([]);
+const countries: { name: string }[] = [];
 const regions = ref([]);
 const cities = ref([]);
 const selectedCountry = ref(null);
