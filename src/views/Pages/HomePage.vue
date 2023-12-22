@@ -39,7 +39,6 @@ const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 onMounted(() => {
   isDarkMode.value = darkModeQuery.matches;
   darkModeQuery.addEventListener('change', updateColorScheme);
-  console.log(isDarkMode.value);
 });
 
 onBeforeUnmount(() => {

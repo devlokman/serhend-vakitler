@@ -110,17 +110,19 @@ const fetchPrayerTimes = async () => {
         nextPrayer.value['title'] = getPrayerTitle(i)
 
         break;
-      } else if(currentTime > prayerTimesTomorrow.value[i]){
-        currentPrayer.value['index'] = 5
-        currentPrayerIndex.value = 5
-        currentPrayer.value['time'] = prayerTimesToday.value[5]
-        currentPrayer.value['title'] = getPrayerTitle(5)
+      } else {
+        if (i === 5){
+          currentPrayer.value['index'] = 5
+          currentPrayerIndex.value = 5
+          currentPrayer.value['time'] = prayerTimesToday.value[5]
+          currentPrayer.value['title'] = getPrayerTitle(5)
 
-        nextPrayer.value['index'] = 0
-        nextPrayer.value['time'] = prayerTimesTomorrow.value[0]
-        nextPrayer.value['title'] = getPrayerTitle(0)
-        nextDay = true;
-        break;
+          nextPrayer.value['index'] = 0
+          nextPrayer.value['time'] = prayerTimesTomorrow.value[0]
+          nextPrayer.value['title'] = getPrayerTitle(0)
+          nextDay = true;
+
+        }
       }
     }
 
