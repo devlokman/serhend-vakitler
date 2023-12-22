@@ -5,7 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const getPrayerTimes = async () => {
     const days = 3;
     const timezoneOffset = 60;
-    const calculationMethod = 'Turkey';
+    const calculationMethod = 'Semerkand';
 
 
     const country = getLocalStorageItem('selectedCountry') ?? 'Turkey';
