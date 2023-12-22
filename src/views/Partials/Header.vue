@@ -6,7 +6,7 @@
             <ion-icon :icon="menuOutline"></ion-icon>
           </ion-button>
       </ion-buttons>
-      <ion-title class="ion-text-center">
+      <ion-title class="ion-text-center" @click="openLocationModal">
         <div class="location">
           <span slot="start">
             {{selectedCountry}} / {{selectedCity}}
