@@ -52,7 +52,6 @@ ion-content {
   margin: 0px auto;
   .day{
     font-size:42px;
-    color:#fff;
     font-weight:bold;
   }
   .monthYear{
