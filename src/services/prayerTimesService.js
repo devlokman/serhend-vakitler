@@ -1,14 +1,18 @@
 import axios from 'axios';
+import {getLocalStorageItem} from "@/services/localStorageService.ts";
 
 const API_BASE_URL = 'https://namaz-vakti-api-two.vercel.app';
 
 export const getPrayerTimes = async () => {
-    const country = 'Turkey';
-    const region = 'Ankara';
-    const city = 'Ankara';
     const days = 3;
     const timezoneOffset = 180;
     const calculationMethod = 'Turkey';
+
+
+    const country = getLocalStorageItem('selectedCountry') ?? 'Turkey';
+    const region = getLocalStorageItem('selectedRegion') ?? 'İstanbul';
+    const city = getLocalStorageItem('selectedCity') ?? 'İstanbul';
+
 
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 1);

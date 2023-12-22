@@ -9,12 +9,12 @@
       <ion-title class="ion-text-center">
         <div class="location">
           <span slot="start">
-            Avusturya / Viyana
+            {{selectedCountry}} / {{selectedCity}}
           </span>
         </div>
       </ion-title>
       <ion-buttons slot="end">
-        <ion-button>
+        <ion-button @click="openLocationModal">
           <ion-icon :icon="locationOutline"></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -24,8 +24,24 @@
 
 <script setup lang="ts">
 
-import {IonHeader, IonTitle, IonToolbar} from "@ionic/vue";
+import {IonHeader, IonTitle, IonToolbar, modalController} from "@ionic/vue";
 import {locationOutline, menuOutline} from "ionicons/icons";
+import LocationsModal from "@/views/Components/LocationsModal.vue";
+import {getLocalStorageItem} from "@/services/localStorageService";
+import {ref} from "vue";
+
+const selectedCountry = ref<string>(getLocalStorageItem('selectedCountry') || 'Turkey');
+const selectedCity = ref<string>(getLocalStorageItem('selectedCity') || 'İstanbul');
+
+
+const openLocationModal = async () => {
+  const modal = await modalController.create({
+    component: LocationsModal,
+  });
+
+  modal.present();
+
+};
 </script>
 
 <style scoped>

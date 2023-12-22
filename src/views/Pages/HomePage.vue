@@ -22,11 +22,21 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/vue';
+import {
+  IonPage,
+  IonTabs,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
+  IonRouterOutlet,
+  modalController
+} from '@ionic/vue';
 import {timerOutline, settingsOutline} from "ionicons/icons";
 import Logo from "@/views/Partials/Logo.vue";
 
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import LocationsModal from "@/views/Components/LocationsModal.vue";
 
 const isDarkMode = ref(false);
 
@@ -40,6 +50,15 @@ onMounted(() => {
   isDarkMode.value = darkModeQuery.matches;
   darkModeQuery.addEventListener('change', updateColorScheme);
 });
+
+const openLocationModal = async () => {
+  const modal = await modalController.create({
+    component: LocationsModal,
+  });
+
+  modal.present();
+
+};
 
 onBeforeUnmount(() => {
   darkModeQuery.removeEventListener('change', updateColorScheme);
