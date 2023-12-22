@@ -58,8 +58,9 @@ import {onMounted, ref, watch} from 'vue';
 import {fetchCountries} from "@/services/countriesService";
 import {fetchRegions} from "@/services/countryService";
 import {fetchCities} from "@/services/citiesService";
+import {CountryModel} from "@/models/countries.model";
 
-const countries: { name: string }[] = [];
+const countries = ref<CountryModel[]>([]);
 const regions = ref([]);
 const cities = ref([]);
 const selectedCountry = ref(null);
