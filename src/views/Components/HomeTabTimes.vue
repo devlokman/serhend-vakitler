@@ -14,6 +14,7 @@
         </div>
       </div>
       <PrayerTimes/>
+      <hr/>
     </ion-content>
   </ion-page>
 </template>
