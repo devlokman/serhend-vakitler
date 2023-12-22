@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-import {IonHeader, IonPage, IonTitle, IonToolbar} from "@ionic/vue";
+import {IonHeader, IonTitle, IonToolbar} from "@ionic/vue";
 import {locationOutline, menuOutline} from "ionicons/icons";
 </script>
 

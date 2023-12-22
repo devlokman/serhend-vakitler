@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
 import HomePage from '../views/Pages/HomePage.vue'
 import HomeTabTimes from "@/views/Components/HomeTabTimes.vue";
 import HomeTabSettings from "@/views/Components/HomeTabSettings.vue";

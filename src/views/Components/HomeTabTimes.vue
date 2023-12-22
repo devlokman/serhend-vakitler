@@ -19,7 +19,7 @@
   </ion-page>
 </template>
 <script setup lang="ts">
-import {IonPage,IonHeader,IonToolbar, IonTitle, IonContent} from "@ionic/vue";
+import {IonPage,IonContent} from "@ionic/vue";
 import PrayerTimes from "@/views/Components/PrayerTimes.vue";
 import Header from "@/views/Partials/Header.vue";
 

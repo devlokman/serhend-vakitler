@@ -46,7 +46,6 @@ export default {
     const startCountdown = (endTime, nextDay) => {
       const updateCountdownWrapper = () => {
         if (nextDay) {
-          const today = moment();
           const tomorrow = moment().add(0, 'days');
           const desiredTimeTomorrow = moment(endTime, 'HH:mm');
           const nextDayDate = tomorrow.clone().set({
@@ -63,7 +62,7 @@ export default {
 
       updateCountdownWrapper();
 
-      const intervalId = setInterval(updateCountdownWrapper, 1000);
+      setInterval(updateCountdownWrapper, 1000);
 
     };
 
